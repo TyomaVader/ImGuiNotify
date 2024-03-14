@@ -526,7 +526,7 @@ namespace ImGui
 			char windowName[50];
 			#ifdef _WIN32
 				sprintf_s(windowName, "##TOAST%d", (int)i);
-			#elif defined(__linux__)
+			#elif defined(__linux__) || defined(__EMSCRIPTEN__)
 				sprintf(windowName, "##TOAST%d", (int)i);
 			#else
 				throw "Unsupported platform";
