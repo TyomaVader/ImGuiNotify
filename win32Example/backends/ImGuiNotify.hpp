@@ -527,7 +527,9 @@ namespace ImGui
 			#ifdef _WIN32
 				sprintf_s(windowName, "##TOAST%d", (int)i);
 			#elif defined(__linux__) || defined(__EMSCRIPTEN__)
-				sprintf(windowName, "##TOAST%d", (int)i);
+				std::sprintf(windowName, "##TOAST%d", (int)i);
+			#elif defined (__APPLE__)
+				std::snprintf(windowName, 50, "##TOAST%d", (int)i);
 			#else
 				throw "Unsupported platform";
 			#endif
