@@ -6,7 +6,7 @@
  * https://github.com/patrickcjk/imgui-notify
  * 
  * @version 0.0.3 WIP by TyomaVader
- * @date 18.01.2024
+ * @date 07.07.2024
  */
 
 #ifndef IMGUI_NOTIFY
@@ -539,7 +539,7 @@ namespace ImGui
             //PushStyleColor(ImGuiCol_Text, textColor);
             SetNextWindowBgAlpha(opacity);
 
-            #ifdef NOTIFY_RENDER_OUTSIDE_MAIN_WINDOW
+            #if NOTIFY_RENDER_OUTSIDE_MAIN_WINDOW
                 short mainMonitorId = static_cast<ImGuiViewportP*>(GetMainViewport())->PlatformMonitor;
 
                 ImGuiPlatformIO& platformIO = GetPlatformIO();

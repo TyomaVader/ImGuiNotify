@@ -1,13 +1,17 @@
 # Changelog
 
-## WIP - 18.01.2024
+## WIP - 07.07.2024
 
 ### Added
+- Optional notifications rendering relative to the monitor size (See ```NOTIFY_RENDER_OUTSIDE_MAIN_WINDOW```) ([#7](https://github.com/TyomaVader/ImGuiNotify/issues/7))
 - Simultanious notification rendering limit (See ```NOTIFY_RENDER_LIMIT```)
+- MacOS support ([2199194](https://github.com/TyomaVader/ImGuiNotify/commit/2199194b03fe82892e642ff9920ae41ac542c2d5) & [a3eb32b](https://github.com/TyomaVader/ImGuiNotify/commit/a3eb32bc63e0433d16c0bf2e2e080303889c5737)) \
+Thanks to [@sjy0727](https://github.com/sjy0727) and [@starlight-traveler](https://github.com/starlight-traveler)
 
 ### Changed
 - README clarifications. ([#5](https://github.com/TyomaVader/ImGuiNotify/issues/5))
-- Upgraded Dear ImGui version used in example (Unix & Windows) to [v1.90 WIP](https://github.com/ocornut/imgui/commit/72ebd91567148b4d3dca073c7229c4c0462a0586)
+- Upgraded Dear ImGui version used in example to [v1.90.9](https://github.com/ocornut/imgui/releases/tag/v1.90.9)
+- Upgraded Font Awesome version
 
 ### Fixed
 - Removed unnecessary files. ([#5](https://github.com/TyomaVader/ImGuiNotify/issues/5))
