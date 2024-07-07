@@ -50,3 +50,16 @@ if(UNIX AND NOT APPLE)
 	target_link_libraries(test PRIVATE Vulkan::Vulkan)
 	target_link_libraries(test PRIVATE pthread dl X11 Xrandr)
 endif()
+
+# CMake MacOS Support for unixExample, when installing VulkanSDK choose "Global Source Headers"
+# Change unixExample/backends/IconsFontAwesome6.h appropriately as well
+
+if(APPLE)
+	find_package(Vulkan REQUIRED)
+	target_include_directories(test PRIVATE ${Vulkan_INCLUDE_DIRS})
+	target_link_libraries(test PRIVATE ${Vulkan_LIBRARIES})
+	# Linking against MoltenVK and Metal frameworks
+	find_library(MOLTEN_VK_LIBRARIES NAMES MoltenVK PATHS ${Vulkan_LIBRARY_DIRS})
+	find_library(METAL Metal)
+	target_link_libraries(test PRIVATE ${MOLTEN_VK_LIBRARIES} ${METAL})
+endif()
