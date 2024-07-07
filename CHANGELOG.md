@@ -1,6 +1,6 @@
 # Changelog
 
-## WIP - 07.07.2024
+## [0.0.3] - 07.07.2024
 
 ### Added
 - Optional notifications rendering relative to the monitor size (See ```NOTIFY_RENDER_OUTSIDE_MAIN_WINDOW```) ([#7](https://github.com/TyomaVader/ImGuiNotify/issues/7))
@@ -51,5 +51,6 @@ Thanks to [@sjy0727](https://github.com/sjy0727) and [@starlight-traveler](https
 - Default ImGui theme changed to *Embrace The Darkness* by [@janekb04](https://github.com/janekb04)
 
 
+[0.0.3]: https://github.com/TyomaVader/ImGuiNotify/releases/tag/v0.0.3
 [0.0.2]: https://github.com/TyomaVader/ImGuiNotify/releases/tag/v0.0.2
 [0.0.1]: https://github.com/TyomaVader/ImGuiNotify/releases/tag/v0.0.1

@@ -5,7 +5,7 @@
  * Based on imgui-notify by patrickcjk
  * https://github.com/patrickcjk/imgui-notify
  * 
- * @version 0.0.3 WIP by TyomaVader
+ * @version 0.0.3 by TyomaVader
  * @date 07.07.2024
  */
 

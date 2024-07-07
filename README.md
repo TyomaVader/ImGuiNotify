@@ -7,7 +7,10 @@ Is a header-only wrapper made to create notifications with [Dear ImGui](https://
 > [!IMPORTANT]
 > Requires [C++17](https://en.cppreference.com/w/cpp/17) or later.
 
-## Latest changes (v0.0.1, v0.0.2 & WIP)
+> [!IMPORTANT]
+> Requires Dear ImGui docking branch with multi-viewport enabled for rendering outside the main viewport
+
+## Latest changes (v0.0.1, v0.0.2 & v0.0.3)
 ### Added
 - CMake support, see CMakeLists.txt for details
 - Dismiss button for notifications (optional)
