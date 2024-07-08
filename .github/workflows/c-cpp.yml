@@ -21,6 +21,32 @@ jobs:
         cd unixExample
         make
 
+  macOS:
+    runs-on: macos-latest
+  
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Dependencies
+    - uses: ConorMacBride/install-package@v1.1.0
+      with:
+        brew: cmake molten-vk vulkan-volk glfw
+        
+    - name: Create Build Environment
+      shell: bash
+      run: cmake -E make_directory ${{github.workspace}}/unixExample/build
+      
+    - name: Configure CMake
+      shell: bash
+      run: |
+          cd unixExample
+          cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
+
+    - name: Build
+      shell: bash
+      run: |
+        cd unixExample
+        cmake --build . --config Release --target test
+    
   Windows:
     runs-on: windows-latest
 
