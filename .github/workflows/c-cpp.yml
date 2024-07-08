@@ -26,8 +26,8 @@ jobs:
   
     steps:
     - uses: actions/checkout@v4
-    - name: Install Dependencies
     - uses: ConorMacBride/install-package@v1.1.0
+    - name: Install Dependencies
       with:
         brew: cmake molten-vk vulkan-volk glfw
     - name: Create Build Environment
