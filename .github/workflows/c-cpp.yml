@@ -21,6 +21,25 @@ jobs:
         cd unixExample
         make
 
+  macOS:
+    runs-on: macos-latest
+  
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ConorMacBride/install-package@v1.1.0
+      with:
+        brew: cmake molten-vk vulkan-volk glfw
+    - name: Configure CMake
+      shell: bash
+      run: >
+        cmake -B ${{github.workspace}}/unixExample/build
+        -DCMAKE_BUILD_TYPE=Release
+        -S ${{github.workspace}}/unixExample
+    - name: Build
+      shell: bash
+      run: |
+        cmake --build ${{github.workspace}}/unixExample/build --config Release --target test
+    
   Windows:
     runs-on: windows-latest
 
