@@ -612,7 +612,7 @@ namespace ImGui
 
                     if (CalcTextSize(content).x > GetContentRegionAvail().x)
                     {
-                        scale = 0.95f;
+                        scale = 0.8f;
                     }
 
                     SetCursorPosX(GetCursorPosX() + (GetWindowSize().x - GetCursorPosX()) * scale);
