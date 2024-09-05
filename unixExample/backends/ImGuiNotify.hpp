@@ -610,7 +610,7 @@ namespace ImGui
                     // NEEDS TO BE REWORKED
                     float scale = 0.8f;
 
-                    if (CalcTextSize(content).x > GetWindowContentRegionMax().x)
+                    if (CalcTextSize(content).x > GetContentRegionAvail().x)
                     {
                         scale = 0.95f;
                     }
