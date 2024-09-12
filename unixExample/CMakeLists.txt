@@ -1,16 +1,8 @@
-#[===[
-        WARNING
-
-        The compiled binary HAS to be in the example directory, NOT in the build directory.
-
-        Check IconsFontAwesome.h for fix.
-]===]
-
 cmake_minimum_required(VERSION 3.10)
 
-project(ImGuiNotify VERSION 0.0.2 LANGUAGES CXX)
+project(ImGuiNotify VERSION 0.0.3 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR})
@@ -40,6 +32,7 @@ target_include_directories(test PRIVATE
 	${IMGUI_DIR}/backends
 	${IMGUI_DIR}/src/sources
 	${IMGUI_DIR}/src/headers
+	${IMGUI_DIR}/fonts
 )
 
 find_package(glfw3 REQUIRED)
@@ -52,7 +45,6 @@ if(UNIX AND NOT APPLE)
 endif()
 
 # CMake MacOS Support for unixExample, when installing VulkanSDK choose "Global Source Headers"
-# Change unixExample/backends/IconsFontAwesome6.h appropriately as well
 
 if(APPLE)
 	find_package(Vulkan REQUIRED)

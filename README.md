@@ -49,33 +49,23 @@ Thanks to [@sjy0727](https://github.com/sjy0727) and [@starlight-traveler](https
 ```c++
 #include "ImGuiNotify.hpp"
 #include "IconsFontAwesome6.h"
+#include "fa-solid-900.h"
 ```
 ### Initialisation (after impl call: ImGui_ImplDX12_Init, ImGui_ImplVulkan_Init, etc.)
 ```c++
 io.Fonts->AddFontDefault();
 
-float baseFontSize = 16.0f; // Default font size
+float baseFontSize = 16.0f;
 float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
 
-// Check if FONT_ICON_FILE_NAME_FAS is a valid path
-std::ifstream fontAwesomeFile(FONT_ICON_FILE_NAME_FAS);
-
-if (!fontAwesomeFile.good())
-{
-    // If it's not good, then we can't find the font and should abort
-    std::cerr << "Could not find the FontAwesome font file." << std::endl;
-    abort();
-}
-
-static const ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
+static constexpr ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
 ImFontConfig iconsConfig;
 iconsConfig.MergeMode = true;
 iconsConfig.PixelSnapH = true;
 iconsConfig.GlyphMinAdvanceX = iconFontSize;
-io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_FAS, iconFontSize, &iconsConfig, iconsRanges);
+io.Fonts->AddFontFromMemoryCompressedTTF(fa_solid_900_compressed_data, fa_solid_900_compressed_size, iconFontSize, &iconsConfig, iconsRanges);
 ```
-> [!WARNING]
-> `FONT_ICON_FILE_NAME_FAS` may require a different path depending on your project structure, see ```IconsFontAwesome6.h``` for details. Incorrect path will result in a runtime error.
+
 ### Create notifications
 - Success
 ```c++
@@ -131,10 +121,8 @@ ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f); // Disable borders
 // Notifications color setup
 ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.10f, 0.10f, 0.10f, 1.00f)); // Background color
 
-
 // Main rendering function
 ImGui::RenderNotifications();
-
 
 //——————————————————————————————— WARNING ———————————————————————————————
 // Argument MUST match the amount of ImGui::PushStyleVar() calls 
@@ -151,7 +139,3 @@ https://github.com/TyomaVader/ImGuiNotify/assets/67346255/c4d9ee3c-5725-4d8d-89e
 
 ## License
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/TyomaVader/ImGuiNotify/blob/Dev/LICENSE)
-
-
-
-

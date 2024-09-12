@@ -14,8 +14,6 @@
 
 #include <stdio.h>              // printf, fprintf
 #include <stdlib.h>             // abort
-#include <fstream>              // std::ifstream for file loading check
-#include <iostream>             // std::cout for debug log
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -23,12 +21,10 @@
 
 #include "IconsFontAwesome6.h"
 
-// Include compressed font.
-// Found one in backends directory. But it could not be used with ImGui io.Fonts
 // For more info creating and using the compressed font follow:
 // TTF TO COMPRESSED: https://github.com/ocornut/imgui/blob/master/misc/fonts/binary_to_compressed_c.cpp
 // USE COMPRESSED FONT: https://github.com/ocornut/imgui/blob/master/docs/FONTS.md#loading-font-data-embedded-in-source-code
-#include "./fonts/fa-solid-900.h"
+#include "fa-solid-900.h"
 
 #include "ImGuiNotify.hpp"
 
@@ -600,10 +596,7 @@ int main(int, char**)
     float baseFontSize = 16.0f;
     float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
 
-    // IF USING COMPRESSED FONT => NO NEED TO CHECK IF IT'S NEAR THE EXECUTABLE.
-    // EXECUTABLE JUST WOULD NOT BE BUILT.
-
-    static constexpr ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0}; // changed to constexpr (common practices)
+    static constexpr ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
     ImFontConfig iconsConfig;
     iconsConfig.MergeMode = true;
     iconsConfig.PixelSnapH = true;
