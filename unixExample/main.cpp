@@ -23,6 +23,13 @@
 
 #include "IconsFontAwesome6.h"
 
+// Include compressed font.
+// Found one in backends directory. But it could not be used with ImGui io.Fonts
+// For more info creating and using the compressed font follow:
+// TTF TO COMPRESSED: https://github.com/ocornut/imgui/blob/master/misc/fonts/binary_to_compressed_c.cpp
+// USE COMPRESSED FONT: https://github.com/ocornut/imgui/blob/master/docs/FONTS.md#loading-font-data-embedded-in-source-code
+#include "./fonts/fa-solid-900.h"
+
 #include "ImGuiNotify.hpp"
 
 #define GLFW_INCLUDE_NONE
@@ -593,22 +600,15 @@ int main(int, char**)
     float baseFontSize = 16.0f;
     float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
 
-    // Check if FONT_ICON_FILE_NAME_FAS is a valid path
-    std::ifstream fontAwesomeFile(FONT_ICON_FILE_NAME_FAS);
+    // IF USING COMPRESSED FONT => NO NEED TO CHECK IF IT'S NEAR THE EXECUTABLE.
+    // EXECUTABLE JUST WOULD NOT BE BUILT.
 
-    if (!fontAwesomeFile.good())
-    {
-        // If it's not good, then we can't find the font and should abort
-        std::cerr << "Could not find the FontAwesome font file." << std::endl; // WARNING: Check the path in the IconsFontAwesome6.h
-        abort();
-    }
-
-    static const ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
+    static constexpr ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0}; // changed to constexpr (common practices)
     ImFontConfig iconsConfig;
     iconsConfig.MergeMode = true;
     iconsConfig.PixelSnapH = true;
     iconsConfig.GlyphMinAdvanceX = iconFontSize;
-    io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_FAS, iconFontSize, &iconsConfig, iconsRanges);
+    io.Fonts->AddFontFromMemoryCompressedTTF(fa_solid_900_compressed_data, fa_solid_900_compressed_size, iconFontSize, &iconsConfig, iconsRanges);
 
     /**
      * FontAwesome setup END
