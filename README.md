@@ -39,8 +39,10 @@ Thanks to [@sjy0727](https://github.com/sjy0727) and [@starlight-traveler](https
 - Default Dear ImGui theme changed to *Embrace The Darkness* by [janekb04](https://github.com/janekb04)
 - Switched from classic enums to scoped enums
 - README clarifications. ([#5](https://github.com/TyomaVader/ImGuiNotify/issues/5))
-- Upgraded Dear ImGui version used in example to [v1.90.9](https://github.com/ocornut/imgui/releases/tag/v1.90.9)
+- Upgraded Dear ImGui version used in example to [v1.91.2](https://github.com/ocornut/imgui/commit/68aa9a86ec933510073932980a0940742ecc833c)
 - Upgraded Font Awesome version
+- Switched to compressed fonts ([#14](https://github.com/TyomaVader/ImGuiNotify/pull/14))
+Thanks to [OlegSirenko](https://github.com/OlegSirenko)
 
 ## [FULL CHANGELOG](https://github.com/TyomaVader/ImGuiNotify/blob/Dev/CHANGELOG.md)
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [WIP]
+
+### Changed
+- Switched to compressed fonts ([#14](https://github.com/TyomaVader/ImGuiNotify/pull/14))
+Thanks to [OlegSirenko](https://github.com/OlegSirenko)
+- Upgraded Dear ImGui version used in example to [v1.91.2](https://github.com/ocornut/imgui/commit/68aa9a86ec933510073932980a0940742ecc833c)
+
 ## [0.0.3] - 07.07.2024
 
 ### Added
