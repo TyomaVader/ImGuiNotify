@@ -1,6 +1,6 @@
 # Changelog
 
-## [WIP]
+## WIP
 
 ### Changed
 - Switched to compressed fonts ([#14](https://github.com/TyomaVader/ImGuiNotify/pull/14))
