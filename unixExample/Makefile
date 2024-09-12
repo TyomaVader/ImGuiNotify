@@ -19,7 +19,7 @@ CXX = g++
 #CXX = clang++
 
 EXE = test
-IMGUI_DIR = ./
+IMGUI_DIR = .
 SOURCES = main.cpp
 
 
@@ -29,7 +29,7 @@ OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 LINUX_VULKAN_LIBS = -lvulkan -lpthread -ldl -lX11 -lXrandr
 
-CXXFLAGS = -std=c++23 -I$(IMGUI_DIR)/imgui -I$(IMGUI_DIR)/backends -I$(IMGUI_DIR)/src/sources -I$(IMGUI_DIR)/src/headers
+CXXFLAGS = -std=c++23 -I$(IMGUI_DIR)/imgui -I$(IMGUI_DIR)/backends -I$(IMGUI_DIR)/src/sources -I$(IMGUI_DIR)/src/headers -I$(IMGUI_DIR)/fonts
 CXXFLAGS += -g -Wall -Wformat
 LIBS =  
 
