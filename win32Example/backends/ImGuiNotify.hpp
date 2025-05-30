@@ -48,7 +48,9 @@
 #define NOTIFY_RENDER_LIMIT					5			// Max number of toasts rendered at the same time. Set to 0 for unlimited
 
 // Warning: Requires ImGui docking with multi-viewport enabled
+#ifndef NOTIFY_RENDER_OUTSIDE_MAIN_WINDOW
 #define NOTIFY_RENDER_OUTSIDE_MAIN_WINDOW	true		// If true, the notifications will be rendered in the corner of the monitor, otherwise in the corner of the main window
+#endif
 
 /**
  * CONFIGURATION SECTION End
