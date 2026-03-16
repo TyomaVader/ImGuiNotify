@@ -568,7 +568,7 @@ namespace ImGui
 
             // Here we render the toast content
             {
-                PushTextWrapPos(mainWindowSize.x / 3.f); // We want to support multi-line text, this will wrap the text after 1/3 of the screen width
+                PushTextWrapPos(GetContentRegionAvail().x); // We want to support multi-line text, so we wrap after reaching the end of the notification window
 
                 bool wasTitleRendered = false;
 
