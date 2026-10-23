@@ -4,13 +4,13 @@ include("${CMAKE_CURRENT_LIST_DIR}/ImGuiNotify.cmake")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Standalone examples/tests only. Library consumers supply their own Dear ImGui.
+# Standalone demo only. Library consumers supply their own Dear ImGui.
 FetchContent_Declare(imgui
     URL https://codeload.github.com/ocornut/imgui/tar.gz/refs/tags/v1.93.0-docking
     URL_HASH SHA256=746c265540bd3aa109570f29492ef4d8f5b421dd9fd0049c35ca35f21496f1a5
 )
 
-# Populated only by the SDL3 demo; headless checks do not build SDL3.
+# Populated by the SDL3 demo.
 FetchContent_Declare(SDL3
     URL https://codeload.github.com/libsdl-org/SDL/tar.gz/refs/tags/release-3.4.18
     URL_HASH SHA256=c4b08b950bd29d83caae0ab8d884298d27046a9d30700fb42841c50992665c90

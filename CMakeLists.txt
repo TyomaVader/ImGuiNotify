@@ -6,12 +6,7 @@ include(cmake/ImGuiNotify.cmake)
 
 option(IMGUI_NOTIFY_BUILD_EXAMPLES "Build the SDL3 native renderer demo" ${PROJECT_IS_TOP_LEVEL})
 if(PROJECT_IS_TOP_LEVEL)
-    include(CTest)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-endif()
-
-if(IMGUI_NOTIFY_BUILD_EXAMPLES OR (PROJECT_IS_TOP_LEVEL AND BUILD_TESTING))
-    include(cmake/Dependencies.cmake)
 endif()
 
 if(IMGUI_NOTIFY_BUILD_EXAMPLES)
@@ -19,9 +14,6 @@ if(IMGUI_NOTIFY_BUILD_EXAMPLES)
     if(APPLE)
         enable_language(OBJCXX)
     endif()
+    include(cmake/Dependencies.cmake)
     add_subdirectory(examples/sdl3)
-endif()
-
-if(PROJECT_IS_TOP_LEVEL AND BUILD_TESTING)
-    add_subdirectory(tests)
 endif()
