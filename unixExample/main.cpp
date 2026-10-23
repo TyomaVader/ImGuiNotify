@@ -20,14 +20,8 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_vulkan.h"
 
-#include "IconsFontAwesome6.h"
-
-// For more info creating and using the compressed font follow:
-// TTF TO COMPRESSED: https://github.com/ocornut/imgui/blob/master/misc/fonts/binary_to_compressed_c.cpp
-// USE COMPRESSED FONT: https://github.com/ocornut/imgui/blob/master/docs/FONTS.md#loading-font-data-embedded-in-source-code
-#include "fa-solid-900.h"
-
-#include "ImGuiNotify.hpp"
+#include "Demo.hpp"
+#include "Fonts.hpp"
 
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
@@ -240,17 +234,17 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
     }
 
     // Create Descriptor Pool
-    // The example only requires a single combined image sampler descriptor for the font image and only uses one descriptor set (for that)
-    // If you wish to load e.g. additional textures you may need to alter pools sizes.
+    // Match the descriptor types used by the pinned Dear ImGui Vulkan backend.
     {
         VkDescriptorPoolSize pool_sizes[] =
         {
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 },
+            { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, IMGUI_IMPL_VULKAN_MINIMUM_SAMPLED_IMAGE_POOL_SIZE },
+            { VK_DESCRIPTOR_TYPE_SAMPLER, IMGUI_IMPL_VULKAN_MINIMUM_SAMPLER_POOL_SIZE },
         };
         VkDescriptorPoolCreateInfo pool_info = {};
         pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-        pool_info.maxSets = 1;
+        pool_info.maxSets = IMGUI_IMPL_VULKAN_MINIMUM_SAMPLED_IMAGE_POOL_SIZE + IMGUI_IMPL_VULKAN_MINIMUM_SAMPLER_POOL_SIZE;
         pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
         pool_info.pPoolSizes = pool_sizes;
         err = vkCreateDescriptorPool(g_Device, &pool_info, g_Allocator, &g_DescriptorPool);
@@ -289,7 +283,7 @@ static void SetupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface
 
     // Create SwapChain, RenderPass, Framebuffer, etc.
     IM_ASSERT(g_MinImageCount >= 2);
-    ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, wd, g_QueueFamily, g_Allocator, width, height, g_MinImageCount);
+    ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, wd, g_QueueFamily, g_Allocator, width, height, g_MinImageCount, 0);
 }
 
 static void CleanupVulkan()
@@ -309,6 +303,8 @@ static void CleanupVulkan()
 static void CleanupVulkanWindow()
 {
     ImGui_ImplVulkanH_DestroyWindow(g_Instance, g_Device, &g_MainWindowData, g_Allocator);
+    vkDestroySurfaceKHR(g_Instance, g_MainWindowData.Surface, g_Allocator);
+    g_MainWindowData.Surface = VK_NULL_HANDLE;
 }
 
 static void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
@@ -400,93 +396,6 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
     wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->SemaphoreCount; // Now we can use the next set of semaphores
 }
 
-// ImGui Theme by janekb04(https://github.com/janekb04), Find more themes at https://github.com/ocornut/imgui/issues/707
-void EmbraceTheDarkness()
-{
-    ImVec4* colors = ImGui::GetStyle().Colors;
-    colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-    colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-    colors[ImGuiCol_WindowBg]               = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
-    colors[ImGuiCol_ChildBg]                = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_PopupBg]                = ImVec4(0.19f, 0.19f, 0.19f, 0.92f);
-    colors[ImGuiCol_Border]                 = ImVec4(0.19f, 0.19f, 0.19f, 0.29f);
-    colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.24f);
-    colors[ImGuiCol_FrameBg]                = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-    colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
-    colors[ImGuiCol_FrameBgActive]          = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-    colors[ImGuiCol_TitleBg]                = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_TitleBgActive]          = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
-    colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_MenuBarBg]              = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-    colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-    colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
-    colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.40f, 0.40f, 0.40f, 0.54f);
-    colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
-    colors[ImGuiCol_CheckMark]              = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-    colors[ImGuiCol_SliderGrab]             = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
-    colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
-    colors[ImGuiCol_Button]                 = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-    colors[ImGuiCol_ButtonHovered]          = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
-    colors[ImGuiCol_ButtonActive]           = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-    colors[ImGuiCol_Header]                 = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_HeaderHovered]          = ImVec4(0.00f, 0.00f, 0.00f, 0.36f);
-    colors[ImGuiCol_HeaderActive]           = ImVec4(0.20f, 0.22f, 0.23f, 0.33f);
-    colors[ImGuiCol_Separator]              = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-    colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
-    colors[ImGuiCol_SeparatorActive]        = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
-    colors[ImGuiCol_ResizeGrip]             = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-    colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
-    colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
-    colors[ImGuiCol_Tab]                    = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_TabHovered]             = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-    colors[ImGuiCol_TabActive]              = ImVec4(0.20f, 0.20f, 0.20f, 0.36f);
-    colors[ImGuiCol_TabUnfocused]           = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-    // colors[ImGuiCol_DockingPreview]         = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-    // colors[ImGuiCol_DockingEmptyBg]         = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_PlotLines]              = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_PlotLinesHovered]       = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_PlotHistogram]          = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_TableHeaderBg]          = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_TableBorderStrong]      = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_TableBorderLight]       = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-    colors[ImGuiCol_TableRowBg]             = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_TableRowBgAlt]          = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
-    colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-    colors[ImGuiCol_DragDropTarget]         = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-    colors[ImGuiCol_NavHighlight]           = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
-    colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
-    colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
-    colors[ImGuiCol_CheckMark]              = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.WindowPadding                     = ImVec2(8.00f, 8.00f);
-    style.FramePadding                      = ImVec2(5.00f, 2.00f);
-    style.CellPadding                       = ImVec2(6.00f, 6.00f);
-    style.ItemSpacing                       = ImVec2(6.00f, 6.00f);
-    style.ItemInnerSpacing                  = ImVec2(6.00f, 6.00f);
-    style.TouchExtraPadding                 = ImVec2(0.00f, 0.00f);
-    style.IndentSpacing                     = 25;
-    style.ScrollbarSize                     = 15;
-    style.GrabMinSize                       = 10;
-    style.WindowBorderSize                  = 1;
-    style.ChildBorderSize                   = 1;
-    style.PopupBorderSize                   = 1;
-    style.FrameBorderSize                   = 1;
-    style.TabBorderSize                     = 1;
-    style.WindowRounding                    = 7;
-    style.ChildRounding                     = 4;
-    style.FrameRounding                     = 3;
-    style.PopupRounding                     = 4;
-    style.ScrollbarRounding                 = 9;
-    style.GrabRounding                      = 3;
-    style.LogSliderDeadzone                 = 4;
-    style.TabRounding                       = 4;
-}
-
-
 // Main code
 int main(int, char**)
 {
@@ -545,11 +454,12 @@ int main(int, char**)
     }
 
     // Theme setup
-    EmbraceTheDarkness();
+    ImGuiNotifyDemo::ApplyTheme();
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForVulkan(window, true);
     ImGui_ImplVulkan_InitInfo init_info = {};
+    init_info.ApiVersion = VK_API_VERSION_1_0;
     init_info.Instance = g_Instance;
     init_info.PhysicalDevice = g_PhysicalDevice;
     init_info.Device = g_Device;
@@ -557,11 +467,11 @@ int main(int, char**)
     init_info.Queue = g_Queue;
     init_info.PipelineCache = g_PipelineCache;
     init_info.DescriptorPool = g_DescriptorPool;
-    init_info.RenderPass = wd->RenderPass;
-    init_info.Subpass = 0;
+    init_info.PipelineInfoMain.RenderPass = wd->RenderPass;
+    init_info.PipelineInfoMain.Subpass = 0;
     init_info.MinImageCount = g_MinImageCount;
     init_info.ImageCount = wd->ImageCount;
-    init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+    init_info.PipelineInfoMain.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
     init_info.Allocator = g_Allocator;
     init_info.CheckVkResultFn = check_vk_result;
     ImGui_ImplVulkan_Init(&init_info);
@@ -585,29 +495,7 @@ int main(int, char**)
     // Our state
     ImVec4 clear_color = ImVec4(0.025f, 0.025f, 0.025f, 1.00f); // Background color of the main glfw window
 
-
-
-
-    /**
-     * FontAwesome setup START (required for icons)
-    */
-
-    io.Fonts->AddFontDefault();
-
-    float baseFontSize = 16.0f;
-    float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
-
-    static constexpr ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
-    ImFontConfig iconsConfig;
-    iconsConfig.MergeMode = true;
-    iconsConfig.PixelSnapH = true;
-    iconsConfig.GlyphMinAdvanceX = iconFontSize;
-    io.Fonts->AddFontFromMemoryCompressedTTF(fa_solid_900_compressed_data, fa_solid_900_compressed_size, iconFontSize, &iconsConfig, iconsRanges);
-
-    /**
-     * FontAwesome setup END
-    */
-
+    LoadNotificationFonts(*io.Fonts);
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -625,7 +513,7 @@ int main(int, char**)
         if (fb_width > 0 && fb_height > 0 && (g_SwapChainRebuild || g_MainWindowData.Width != fb_width || g_MainWindowData.Height != fb_height))
         {
             ImGui_ImplVulkan_SetMinImageCount(g_MinImageCount);
-            ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, &g_MainWindowData, g_QueueFamily, g_Allocator, fb_width, fb_height, g_MinImageCount);
+            ImGui_ImplVulkanH_CreateOrResizeWindow(g_Instance, g_PhysicalDevice, g_Device, &g_MainWindowData, g_QueueFamily, g_Allocator, fb_width, fb_height, g_MinImageCount, 0);
             g_MainWindowData.FrameIndex = 0;
             g_SwapChainRebuild = false;
         }
@@ -640,172 +528,14 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-
-        static bool show_demo_window = true;
-        ImGui::ShowDemoWindow(&show_demo_window);
-
-
-        /**
-         * ImGui Notify Demo Start
-        */
-
-        ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2, ImGui::GetIO().DisplaySize.y / 2), ImGuiCond_Once);
-	    ImGui::SetNextWindowSize({550, 550}, ImGuiCond_Once);
-	    ImGui::Begin("ImGui Notify Test Window");
-
-	    if (ImGui::CollapsingHeader("Examples without title", ImGuiTreeNodeFlags_DefaultOpen))
-	    {
-	    	if (ImGui::Button("Success"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Success, 3000, "That is a success! %s", "(Format here)"});
-	    	}
-
-	    	ImGui::SameLine();
-	    	if (ImGui::Button("Warning"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Warning, 3000, "This is a warning!"});
-	    	}
-
-	    	ImGui::SameLine();
-	    	if (ImGui::Button("Error"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Error, 3000, "Segmentation fault"});
-	    	}
-
-	    	ImGui::SameLine();
-	    	if (ImGui::Button("Info"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Info, 3000, "Info about ImGui..."});
-	    	}
-
-	    	ImGui::SameLine();
-	    	if (ImGui::Button("Info long"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Info, 3000, "Hi, I'm a long notification. I'm here to show you that you can write a lot of text in me. I'm also here to show you that I can wrap text, so you don't have to worry about that."});
-	    	}
-
-            ImGui::SameLine();
-            if (ImGui::Button("Notify with button"))
-            {
-                ImGui::InsertNotification({ImGuiToastType::Error, 3000, "Click me!", [](){ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Thanks for clicking!"});}, "Notification content"});
-            }
-	    }
-
-	    if (ImGui::CollapsingHeader("Do it yourself", ImGuiTreeNodeFlags_DefaultOpen))
-	    {
-	    	static char title[4096] = "Hello there!";
-	    	ImGui::InputTextMultiline("Title", title, sizeof(title));
-
-	    	static char content[4096] = "General Kenobi! \n- Grevious";
-	    	ImGui::InputTextMultiline("Content", content, sizeof(content));
-
-	    	static int duration = 5000; // 5 seconds
-	    	ImGui::InputInt("Duration (ms)", &duration, 100);
-	    	if (duration < 0) duration = 0; // Shouldn't be negative
-
-	    	static const char* type_str[] = { "None", "Success", "Warning", "Error", "Info" };
-	    	static ImGuiToastType type = ImGuiToastType::Success;
-	    	IM_ASSERT(type < ImGuiToastType::COUNT);
-
-	    	if (ImGui::BeginCombo("Type", type_str[(uint8_t)type]))
-	    	{
-	    		for (auto n = 0; n < IM_ARRAYSIZE(type_str); n++)
-	    		{
-	    			const bool isSelected = ((uint8_t)type == n);
-
-	    			if (ImGui::Selectable(type_str[n], isSelected))
-                    {
-                        type = (ImGuiToastType)n;
-                    }
-
-	    			if (isSelected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-	    		}
-
-	    		ImGui::EndCombo();
-	    	}
-
-	    	static bool enable_title = true, enable_content = true;
-	    	ImGui::Checkbox("Enable title", &enable_title);
-	    	ImGui::SameLine();
-	    	ImGui::Checkbox("Enable content", &enable_content);
-
-	    	if (ImGui::Button("Show"))
-	    	{
-	    		ImGuiToast toast(type, duration);
-
-	    		if (enable_title)
-	    			toast.setTitle(title);
-
-	    		if (enable_content)
-	    			toast.setContent(content);
-
-	    		ImGui::InsertNotification(toast);
-	    	}
-	    }
-
-	    ImGui::End();
-
-        /**
-         * ImGui Notify Demo End
-        */
-
-
-
-
-
-
-
-
+        ImGuiNotifyDemo::DrawControls();
 
         // YOUR CODE GOES HERE
         #if _DEBUG
             ImGui::ShowStackToolWindow();
         #endif
 
-
-
-
-
-
-
-
-
-
-
-        /**
-         * Notifications Rendering Start
-        */
-
-        // Notifications style setup
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f); // Disable round borders
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f); // Disable borders
-
-        // Notifications color setup
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.10f, 0.10f, 0.10f, 1.00f)); // Background color
-
-
-        // Main rendering function
-        ImGui::RenderNotifications();
-
-
-        //——————————————————————————————— WARNING ———————————————————————————————
-        // Argument MUST match the amount of ImGui::PushStyleVar() calls 
-        ImGui::PopStyleVar(2);
-        // Argument MUST match the amount of ImGui::PushStyleColor() calls 
-        ImGui::PopStyleColor(1);
-
-        /**
-         * Notifications Rendering End
-        */
-
-
-
-
-
-
+        ImGuiNotifyDemo::DrawNotifications();
 
         // Rendering
         ImGui::Render();

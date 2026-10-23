@@ -13,14 +13,8 @@
 #include <dxgi1_5.h>
 #include <tchar.h>
 
-#include "IconsFontAwesome6.h"
-
-// For more info creating and using the compressed font follow:
-// TTF TO COMPRESSED: https://github.com/ocornut/imgui/blob/master/misc/fonts/binary_to_compressed_c.cpp
-// USE COMPRESSED FONT: https://github.com/ocornut/imgui/blob/master/docs/FONTS.md#loading-font-data-embedded-in-source-code
-#include "fa-solid-900.h"
-
-#include "ImGuiNotify.hpp"
+#include "Demo.hpp"
+#include "Fonts.hpp"
 
 #ifdef _DEBUG
 #define DX12_ENABLE_DEBUG_LAYER
@@ -116,91 +110,6 @@ void WaitForPendingOperations();
 FrameContext* WaitForNextFrameContext();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-// ImGui Theme by janekb04(https://github.com/janekb04), Find more themes at https://github.com/ocornut/imgui/issues/707
-void EmbraceTheDarkness()
-{
-    ImVec4* colors = ImGui::GetStyle().Colors;
-    colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-    colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-    colors[ImGuiCol_WindowBg]               = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
-    colors[ImGuiCol_ChildBg]                = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_PopupBg]                = ImVec4(0.19f, 0.19f, 0.19f, 0.92f);
-    colors[ImGuiCol_Border]                 = ImVec4(0.19f, 0.19f, 0.19f, 0.29f);
-    colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.24f);
-    colors[ImGuiCol_FrameBg]                = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-    colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
-    colors[ImGuiCol_FrameBgActive]          = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-    colors[ImGuiCol_TitleBg]                = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_TitleBgActive]          = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
-    colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_MenuBarBg]              = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-    colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-    colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
-    colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.40f, 0.40f, 0.40f, 0.54f);
-    colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
-    colors[ImGuiCol_CheckMark]              = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-    colors[ImGuiCol_SliderGrab]             = ImVec4(0.34f, 0.34f, 0.34f, 0.54f);
-    colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.56f, 0.56f, 0.56f, 0.54f);
-    colors[ImGuiCol_Button]                 = ImVec4(0.05f, 0.05f, 0.05f, 0.54f);
-    colors[ImGuiCol_ButtonHovered]          = ImVec4(0.19f, 0.19f, 0.19f, 0.54f);
-    colors[ImGuiCol_ButtonActive]           = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-    colors[ImGuiCol_Header]                 = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_HeaderHovered]          = ImVec4(0.00f, 0.00f, 0.00f, 0.36f);
-    colors[ImGuiCol_HeaderActive]           = ImVec4(0.20f, 0.22f, 0.23f, 0.33f);
-    colors[ImGuiCol_Separator]              = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-    colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
-    colors[ImGuiCol_SeparatorActive]        = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
-    colors[ImGuiCol_ResizeGrip]             = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-    colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.44f, 0.44f, 0.44f, 0.29f);
-    colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.40f, 0.44f, 0.47f, 1.00f);
-    colors[ImGuiCol_Tab]                    = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_TabHovered]             = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-    colors[ImGuiCol_TabActive]              = ImVec4(0.20f, 0.20f, 0.20f, 0.36f);
-    colors[ImGuiCol_TabUnfocused]           = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-    colors[ImGuiCol_DockingPreview]         = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-    colors[ImGuiCol_DockingEmptyBg]         = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_PlotLines]              = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_PlotLinesHovered]       = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_PlotHistogram]          = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_TableHeaderBg]          = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_TableBorderStrong]      = ImVec4(0.00f, 0.00f, 0.00f, 0.52f);
-    colors[ImGuiCol_TableBorderLight]       = ImVec4(0.28f, 0.28f, 0.28f, 0.29f);
-    colors[ImGuiCol_TableRowBg]             = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_TableRowBgAlt]          = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
-    colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.20f, 0.22f, 0.23f, 1.00f);
-    colors[ImGuiCol_DragDropTarget]         = ImVec4(0.33f, 0.67f, 0.86f, 1.00f);
-    colors[ImGuiCol_NavHighlight]           = ImVec4(1.00f, 0.00f, 0.00f, 1.00f);
-    colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 0.00f, 0.00f, 0.70f);
-    colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(1.00f, 0.00f, 0.00f, 0.20f);
-    colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(1.00f, 0.00f, 0.00f, 0.35f);
-
-    ImGuiStyle& style = ImGui::GetStyle();
-    style.WindowPadding                     = ImVec2(8.00f, 8.00f);
-    style.FramePadding                      = ImVec2(5.00f, 2.00f);
-    style.CellPadding                       = ImVec2(6.00f, 6.00f);
-    style.ItemSpacing                       = ImVec2(6.00f, 6.00f);
-    style.ItemInnerSpacing                  = ImVec2(6.00f, 6.00f);
-    style.TouchExtraPadding                 = ImVec2(0.00f, 0.00f);
-    style.IndentSpacing                     = 25;
-    style.ScrollbarSize                     = 15;
-    style.GrabMinSize                       = 10;
-    style.WindowBorderSize                  = 1;
-    style.ChildBorderSize                   = 1;
-    style.PopupBorderSize                   = 1;
-    style.FrameBorderSize                   = 1;
-    style.TabBorderSize                     = 1;
-    style.WindowRounding                    = 7;
-    style.ChildRounding                     = 4;
-    style.FrameRounding                     = 3;
-    style.PopupRounding                     = 4;
-    style.ScrollbarRounding                 = 9;
-    style.GrabRounding                      = 3;
-    style.LogSliderDeadzone                 = 4;
-    style.TabRounding                       = 4;
-}
-
 // Main code
 int main(int, char**)
 {
@@ -255,8 +164,7 @@ int main(int, char**)
     }
 
     // Theme setup
-    EmbraceTheDarkness();
-
+    ImGuiNotifyDemo::ApplyTheme();
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hwnd);
@@ -296,39 +204,9 @@ int main(int, char**)
     //IM_ASSERT(font != nullptr);
 
     // Our state
-    bool show_demo_window = true;
     ImVec4 clear_color = ImVec4(0.025f, 0.025f, 0.025f, 1.00f);
 
-
-
-
-
-    /**
-     * FontAwesome setup START (required for icons)
-    */
-
-    io.Fonts->AddFontDefault();
-
-    float baseFontSize = 16.0f;
-    float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
-
-    static constexpr ImWchar iconsRanges[] = {ICON_MIN_FA, ICON_MAX_16_FA, 0};
-    ImFontConfig iconsConfig;
-    iconsConfig.MergeMode = true;
-    iconsConfig.PixelSnapH = true;
-    iconsConfig.GlyphMinAdvanceX = iconFontSize;
-    io.Fonts->AddFontFromMemoryCompressedTTF(fa_solid_900_compressed_data, fa_solid_900_compressed_size, iconFontSize, &iconsConfig, iconsRanges);
-
-    /**
-     * FontAwesome setup END
-    */
-
-
-
-
-
-
-
+    LoadNotificationFonts(*io.Fonts);
 
     // Main loop
     bool done = false;
@@ -360,193 +238,11 @@ int main(int, char**)
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /**
-         * ImGui Notify Demo Start
-        */
-
-        ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x / 2, ImGui::GetIO().DisplaySize.y / 2), ImGuiCond_Once);
-	    ImGui::SetNextWindowSize({550, 550}, ImGuiCond_Once);
-	    ImGui::Begin("ImGui Notify Test Window");
-
-	    if (ImGui::CollapsingHeader("Examples without title", ImGuiTreeNodeFlags_DefaultOpen))
-	    {
-	    	if (ImGui::Button("Success"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Success, 3000, "That is a success! %s", "(Format here)"});
-	    	}
-
-	    	ImGui::SameLine();
-	    	if (ImGui::Button("Warning"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Warning, 3000, "This is a warning!"});
-	    	}
-
-	    	ImGui::SameLine();
-	    	if (ImGui::Button("Error"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Error, 3000, "Segmentation fault"});
-	    	}
-
-	    	ImGui::SameLine();
-	    	if (ImGui::Button("Info"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Info, 3000, "Info about ImGui..."});
-	    	}
-
-	    	ImGui::SameLine();
-	    	if (ImGui::Button("Info long"))
-	    	{
-	    		ImGui::InsertNotification({ImGuiToastType::Info, 3000, "Hi, I'm a long notification. I'm here to show you that you can write a lot of text in me. I'm also here to show you that I can wrap text, so you don't have to worry about that."});
-	    	}
-
-            ImGui::SameLine();
-            if (ImGui::Button("Notify with button"))
-            {
-                ImGui::InsertNotification({ImGuiToastType::Error, 3000, "Click me!", [](){ImGui::InsertNotification({ImGuiToastType::Success, 3000, "Thanks for clicking!"});}, "Notification content"});
-            }
-	    }
-
-	    if (ImGui::CollapsingHeader("Do it yourself", ImGuiTreeNodeFlags_DefaultOpen))
-	    {
-	    	static char title[4096] = "Hello there!";
-	    	ImGui::InputTextMultiline("Title", title, sizeof(title));
-
-	    	static char content[4096] = "General Kenobi! \n- Grevious";
-	    	ImGui::InputTextMultiline("Content", content, sizeof(content));
-
-	    	static int duration = 5000; // 5 seconds
-	    	ImGui::InputInt("Duration (ms)", &duration, 100);
-	    	if (duration < 0) duration = 0; // Shouldn't be negative
-
-	    	static const char* type_str[] = { "None", "Success", "Warning", "Error", "Info" };
-	    	static ImGuiToastType type = ImGuiToastType::Success;
-	    	IM_ASSERT(type < ImGuiToastType::COUNT);
-
-	    	if (ImGui::BeginCombo("Type", type_str[(uint8_t)type]))
-	    	{
-	    		for (auto n = 0; n < IM_ARRAYSIZE(type_str); n++)
-	    		{
-	    			const bool isSelected = ((uint8_t)type == n);
-
-	    			if (ImGui::Selectable(type_str[n], isSelected))
-                    {
-                        type = (ImGuiToastType)n;
-                    }
-
-	    			if (isSelected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-	    		}
-
-	    		ImGui::EndCombo();
-	    	}
-
-	    	static bool enable_title = true, enable_content = true;
-	    	ImGui::Checkbox("Enable title", &enable_title);
-	    	ImGui::SameLine();
-	    	ImGui::Checkbox("Enable content", &enable_content);
-
-	    	if (ImGui::Button("Show"))
-	    	{
-	    		ImGuiToast toast(type, duration);
-
-	    		if (enable_title)
-	    			toast.setTitle(title);
-
-	    		if (enable_content)
-	    			toast.setContent(content);
-
-	    		ImGui::InsertNotification(toast);
-	    	}
-	    }
-
-	    ImGui::End();
-
-        /**
-         * ImGui Notify Demo End
-        */
-
-
-
-
-
-
-
-
+        ImGuiNotifyDemo::DrawControls();
 
         // YOUR CODE GOES HERE
 
-
-
-
-
-
-
-
-
-
-
-        /**
-         * Notifications Rendering Start
-        */
-
-        // Notifications style setup
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f); // Disable round borders
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f); // Disable borders
-
-        // Notifications color setup
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.10f, 0.10f, 0.10f, 1.00f)); // Background color
-
-
-        // Main rendering function
-        ImGui::RenderNotifications();
-
-
-        //——————————————————————————————— WARNING ———————————————————————————————
-        // Argument MUST match the amount of ImGui::PushStyleVar() calls 
-        ImGui::PopStyleVar(2);
-        // Argument MUST match the amount of ImGui::PushStyleColor() calls 
-        ImGui::PopStyleColor(1);
-
-        /**
-         * Notifications Rendering End
-        */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        ImGuiNotifyDemo::DrawNotifications();
 
         // Rendering
         ImGui::Render();

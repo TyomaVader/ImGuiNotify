@@ -1,36 +1,15 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.24)
+project(ImGuiNotifyWindowsExample VERSION 0.0.3 LANGUAGES CXX)
 
-project(ImGuiNotify VERSION 0.0.3 LANGUAGES CXX)
+include(../cmake/Dependencies.cmake)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
-set(SOURCES main.cpp)
-
-set(IMGUI_SOURCES
-	${IMGUI_DIR}/imgui/imgui.cpp
-	${IMGUI_DIR}/imgui/imgui_demo.cpp
-	${IMGUI_DIR}/imgui/imgui_draw.cpp
-	${IMGUI_DIR}/imgui/imgui_tables.cpp
-	${IMGUI_DIR}/imgui/imgui_widgets.cpp
-	${IMGUI_DIR}/imgui/implot.cpp
-	${IMGUI_DIR}/imgui/implot_items.cpp
-	${IMGUI_DIR}/imgui/implot_demo.cpp
+add_executable(test main.cpp
+    ../examples/common/Demo.cpp
+    ${imgui_SOURCE_DIR}/imgui_demo.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_win32.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_dx12.cpp
 )
-
-set(BACKEND_SOURCES
-	${IMGUI_DIR}/backends/imgui_impl_win32.cpp
-	${IMGUI_DIR}/backends/imgui_impl_dx12.cpp
-)
-
-add_executable(test ${SOURCES} ${IMGUI_SOURCES} ${BACKEND_SOURCES})
-
 target_include_directories(test PRIVATE
-	${IMGUI_DIR}/imgui
-	${IMGUI_DIR}/backends
-	${IMGUI_DIR}/fonts
+    ../include ../examples/common ${imgui_SOURCE_DIR}/backends
 )
-
-target_link_libraries(test PRIVATE "d3d12.lib" "dxgi.lib" "d3dcompiler.lib")
+target_link_libraries(test PRIVATE imgui_core d3d12 dxgi d3dcompiler)
