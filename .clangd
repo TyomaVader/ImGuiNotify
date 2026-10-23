@@ -1,15 +1,2 @@
 CompileFlags:
   CompilationDatabase: build
-
----
-If:
-  PathMatch: unixExample/.*
-CompileFlags:
-  CompilationDatabase: unixExample/build
-
----
-If:
-  PathMatch: win32Example/.*
-CompileFlags:
-  CompilationDatabase: win32Example/build
-
