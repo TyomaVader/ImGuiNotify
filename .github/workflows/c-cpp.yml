@@ -1,61 +1,36 @@
-name: Build tests
+name: Build
 
 on:
   push:
-    branches: [ "Dev" ]
+    branches: ['**']
   pull_request:
-    branches: [ "Dev" ]
+    branches: ["Dev"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  Linux:
-    runs-on: ubuntu-latest
-
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
     steps:
-    - uses: actions/checkout@v4
-    - name: Install Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libglfw3-dev libsdl2-dev gcc-multilib g++-multilib libfreetype6-dev libvulkan-dev
-    - name: make
-      run: |
-        cd unixExample
-        make
-
-  macOS:
-    runs-on: macos-latest
-  
-    steps:
-    - uses: actions/checkout@v4
-    - uses: ConorMacBride/install-package@v1.1.0
-      with:
-        brew: cmake molten-vk vulkan-volk glfw
-    - name: Configure CMake
-      shell: bash
-      run: >
-        cmake -B ${{github.workspace}}/unixExample/build
-        -DCMAKE_BUILD_TYPE=Release
-        -S ${{github.workspace}}/unixExample
-    - name: Build
-      shell: bash
-      run: |
-        cmake --build ${{github.workspace}}/unixExample/build --config Release --target test
-    
-  Windows:
-    runs-on: windows-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - uses: lukka/get-cmake@latest
-    - name: Create Build Environment
-      shell: powershell
-      run: cmake -E make_directory ${{github.workspace}}/win32Example/build
-    - name: Configure CMake
-      shell: powershell
-      run: |
-        cd win32Example
-        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
-    - name: Build
-      shell: powershell
-      run: |
-        cd win32Example
-        cmake --build . --config Release --target test
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libvulkan-dev libx11-dev libxext-dev \
+            libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev libudev-dev
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --config Release --parallel 2
